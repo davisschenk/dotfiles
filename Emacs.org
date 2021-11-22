@@ -261,6 +261,12 @@ Try these commands with =M-x=:
 
 #+END_SRC
 
+*** Dockerfile mode
+#+BEGIN_SRC emacs-lisp
+(use-package dockerfile-mode)
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+#+END_SRC
+
 ** Company Mode
 
 [[http://company-mode.github.io/][Company Mode]] provides a nicer in-buffer completion interface than =completion-at-point= which is more reminiscent of what you would expect from an IDE.  We add a simple configuration to make the keybindings a little more useful (=TAB= now completes the selection and initiates completion at the current location if needed).
@@ -358,6 +364,15 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
   :diminish smartparens-mode)
 #+END_SRC
 
+* Runtime Performance
+Dial the GC threshold back down so that garbage collection happens more frequently but in less time.
+#+begin_src emacs-lisp
+
+  ;; Make gc pauses faster by decreasing the threshold.
+  (setq gc-cons-threshold (* 2 1000 1000))
+
+#+end_src
+
 * UI Configurations
 ** Basic
 #+begin_src emacs-lisp
@@ -370,7 +385,7 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
   (set-fringe-mode 10)        ; Give some breathing room
 
   (menu-bar-mode -1)          ; Disable the menu bar
-  (use-package 'fill-column-indicator) ;; fci-mode to show fill column
+  (use-package fill-column-indicator) ;; fci-mode to show fill column
   ;; Set frame transparency
   ;;(set-frame-parameter (selected-frame) 'alpha efs/frame-transparency)
   ;;(add-to-list 'default-frame-alist `(alpha . ,efs/frame-transparency))
@@ -507,15 +522,6 @@ Emacs' built in commenting functionality =comment-dwim= (usually bound to =M-;=)
     ([remap describe-command] . helpful-command)
     ([remap describe-variable] . counsel-describe-variable)
     ([remap describe-key] . helpful-key))
-
-#+end_src
-
-* Runtime Performance
-Dial the GC threshold back down so that garbage collection happens more frequently but in less time.
-#+begin_src emacs-lisp
-
-  ;; Make gc pauses faster by decreasing the threshold.
-  (setq gc-cons-threshold (* 2 1000 1000))
 
 #+end_src
 
