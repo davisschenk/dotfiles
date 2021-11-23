@@ -1,7 +1,6 @@
 #+TITLE: My Emacs Configuration
 #+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init.el :mkdirp yes
 
-* My Emacs Configuration
 * Startup Performace
 #+begin_src emacs-lisp
   ;; The default is 800 kilobytes.  Measured in bytes.
@@ -70,8 +69,8 @@
         `((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
 
   ;; Put backup files neatly away                                                 
-  (let ((backup-dir "~/tmp/emacs/backups")
-    (auto-saves-dir "~/tmp/emacs/auto-saves/"))
+  (let ((backup-dir "/tmp/emacs/backups")
+    (auto-saves-dir "/tmp/emacs/auto-saves/"))
     (dolist (dir (list backup-dir auto-saves-dir))
   (when (not (file-directory-p dir))
   (make-directory dir t)))
@@ -242,7 +241,7 @@ Try these commands with =M-x=:
   ;; (setq lsp-signature-auto-activate nil)
 
   ;; comment to disable rustfmt on save
-  (setq rustic-format-on-save t)
+  ;; (setq rustic-format-on-save t)
   (add-hook 'rustic-mode-hook 'rk/rustic-mode-hook))
 
 (defun rk/rustic-mode-hook ()
@@ -507,7 +506,6 @@ Dial the GC threshold back down so that garbage collection happens more frequent
 #+end_src
 
 ** Helpful Help Commands
-
 [[https://github.com/Wilfred/helpful][Helpful]] adds a lot of very helpful (get it?) information to Emacs' =describe-= command buffers.  For example, if you use =describe-function=, you will not only get the documentation about the function, you will also see the source code of the function and where it gets used in other places in the Emacs configuration.  It is very useful for figuring out how things work in Emacs.
 
 #+begin_src emacs-lisp
@@ -616,6 +614,16 @@ You can add more =src= block templates below by copying one of the lines and cha
     (add-to-list 'org-structure-template-alist '("py" . "src python")))
 
 #+end_src
+
+** Agenda
+#+BEGIN_SRC emacs-lisp
+(setq org-agenda-files '("~/Documents/EmacsNotes/Tasks.org"))
+(setq org-refile-targets '(("~/Documents/EmacsNotes/Archive.org" :maxlevel . 1)("~/Documents/EmacsNotes/Tasks.org" :maxlevel . 1)))
+(advice-add 'org-refile :after 'org-save-all-org-buffers)
+(setq org-capture-templates
+      '(("t" "Todo" entry (file+headline "~/Documents/EmacsNotes/Tasks.org" "Tasks")
+         "* TODO %?\n  %i\n  %a")))
+#+END_SRC
 
 * Useful functions
 ** Connect to colostate cs computer
