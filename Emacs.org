@@ -1,7 +1,8 @@
 #+TITLE: My Emacs Configuration
 #+PROPERTY: header-args:emacs-lisp :tangle ~/.emacs.d/init.el :mkdirp yes
 
-* Startup Performace
+* Startup
+** Performance
 #+begin_src emacs-lisp
   ;; The default is 800 kilobytes.  Measured in bytes.
   (setq gc-cons-threshold (* 50 1000 1000))
@@ -16,29 +17,43 @@
   (add-hook 'emacs-startup-hook #'efs/display-startup-time)
 
 #+end_src
+** Package System Setup
+ #+begin_src emacs-lisp
 
-* Package System Setup
-#+begin_src emacs-lisp
+   ;; Initialize package sources
+   (require 'package)
 
-  ;; Initialize package sources
-  (require 'package)
+   (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                            ("org" . "https://orgmode.org/elpa/")
+                            ("elpa" . "https://elpa.gnu.org/packages/")))
 
-  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                           ("org" . "https://orgmode.org/elpa/")
-                           ("elpa" . "https://elpa.gnu.org/packages/")))
+   (package-initialize)
+   (unless package-archive-contents
+     (package-refresh-contents))
 
-  (package-initialize)
-  (unless package-archive-contents
-    (package-refresh-contents))
+     ;; Initialize use-package on non-Linux platforms
+   (unless (package-installed-p 'use-package)
+     (package-install 'use-package))
 
-    ;; Initialize use-package on non-Linux platforms
-  (unless (package-installed-p 'use-package)
-    (package-install 'use-package))
+   (require 'use-package)
+   (setq use-package-always-ensure t)
 
-  (require 'use-package)
-  (setq use-package-always-ensure t)
+ #+end_src
 
-#+end_src
+** Dashboard 
+#+BEGIN_SRC emacs-lisp
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook))
+
+(setq dashboard-projects-backend 'projectile)
+(setq dashboard-items '((recents  . 5)
+                        (bookmarks . 5)
+                        (projects . 5)
+                        (agenda . 5)
+                        (registers . 5)))
+#+END_SRC
 
 * Auto Package Update
 #+begin_src emacs-lisp
@@ -315,8 +330,8 @@ We also use [[https://github.com/sebastiencs/company-box][company-box]] to furth
     ("C-c p" . projectile-command-map)
     :init
     ;; NOTE: Set this to the folder where you keep your Git repos!
-    (when (file-directory-p "~/Projects/Code")
-      (setq projectile-project-search-path '("~/Projects/Code")))
+    (when (file-directory-p "~/Developer")
+      (setq projectile-project-search-path '("~/Projects/Developer")))
     (setq projectile-switch-project-action #'projectile-dired))
 
   (use-package counsel-projectile
@@ -540,12 +555,7 @@ Dial the GC threshold back down so that garbage collection happens more frequent
     (setq org-log-done 'time)
     (setq org-log-into-drawer t)
 
-    (setq org-agenda-files
-        '(
-        "~/Documents/Notes/Tasks.org"
-        "~/Documents/Notes/Dump.org"
-        ))
-    )
+     )
 
 #+end_src
 
