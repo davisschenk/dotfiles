@@ -1,0 +1,8 @@
+# Setup bash history to append and have large size
+shopt -s histappend
+HISTCONTROL=ignoredups:ignorespace
+HISTSIZE=10000
+HISTFILESIZE=20000
+
+# Update window size after each command
+shopt -s checkwinsize
