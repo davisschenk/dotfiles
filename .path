@@ -1,1 +1,2 @@
 export PATH="~/.emacs.d/bin:$PATH"
+export PATH="~/.cargo/bin:$PATH"
