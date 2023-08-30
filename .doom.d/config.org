@@ -96,6 +96,20 @@ Keybinds for toggling latex preview and pretty entities
 ;; (load! "lisp/dnd-mode.el")
 ;;(setq dnd-snippet-dir "~/Developer/Tools/dnd-mode/snippets")
 #+end_src
+** Time source block
+#+begin_src emacs-lisp :tangle yes
+(defun davis/time-call (time-call &rest args)
+  (message "Ohai %s" args)
+  (let ((start-time (float-time))
+        (result (apply time-call args)))
+    (message "Function call took %f seconds" (- (float-time) start-time))
+    result))
+
+(advice-add 'org-babel-execute-src-block :around #'davis/time-call)
+
+#+end_src
+
+#+RESULTS:
 
 * Latex
 ** Classes
@@ -168,11 +182,16 @@ Makes latex math previews much easier to read
 * Evil
 ** Visual Line Mode
 #+begin_src emacs-lisp :tangle yes
-(use-package! evil-better-visual-line
-  :after evil-colemak-basics
-  :config
-  (evil-better-visual-line-on))
+(use-package-hook! evil
+  :pre-init
+  (setq evil-respect-visual-line-mode t) ;; sane j and k behavior
+  t)
+
 #+end_src
+
+#+RESULTS:
+| lambda | nil | (setq evil-respect-visual-line-mode t) | t |
+
 ** String inflection
 #+begin_src emacs-lisp :tangle yes
 (use-package! string-inflection

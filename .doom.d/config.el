@@ -57,6 +57,15 @@
 ;; (load! "lisp/dnd-mode.el")
 ;;(setq dnd-snippet-dir "~/Developer/Tools/dnd-mode/snippets")
 
+(defun davis/time-call (time-call &rest args)
+  (message "Ohai %s" args)
+  (let ((start-time (float-time))
+        (result (apply time-call args)))
+    (message "Function call took %f seconds" (- (float-time) start-time))
+    result))
+
+(advice-add 'org-babel-execute-src-block :around #'davis/time-call)
+
 (after! ox-latex
   (add-to-list 'org-latex-classes '(
     "cheatsheet"
@@ -105,10 +114,10 @@
 
 (after! org (plist-put org-format-latex-options :scale 3.0))
 
-(use-package! evil-better-visual-line
-  :after evil-colemak-basics
-  :config
-  (evil-better-visual-line-on))
+(use-package-hook! evil
+  :pre-init
+  (setq evil-respect-visual-line-mode t) ;; sane j and k behavior
+  t)
 
 (use-package! string-inflection
   :commands (string-inflection-all-cycle
