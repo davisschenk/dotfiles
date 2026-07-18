@@ -5,4 +5,6 @@ set -euo pipefail
 # searches for this filename first, and executes it with $PWD set to this
 # repo's own clone directory) — so pointing chezmoi's source straight at
 # $PWD applies this repo without a second clone.
-chezmoi --source="$PWD" init --apply
+# --force: runs unattended, so a conflict prompt (e.g. a pre-existing
+# .zshrc) would crash on the missing TTY instead of asking.
+chezmoi --source="$PWD" init --apply --force
