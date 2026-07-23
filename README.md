@@ -16,6 +16,16 @@ the clone (`chezmoi --source="$PWD" init --apply`) — no separate clone step.
   when those plugins come from Nix; unset (and skipped) elsewhere.
 - `dot_config/starship.toml` → `~/.config/starship.toml` — starship's official
   ["Pure" preset](https://starship.rs/presets/pure-preset), verbatim.
+- `dot_claude/settings.json` → `~/.claude/settings.json` — sets
+  `permissions.defaultMode: bypassPermissions` so Claude Code always runs with
+  `--dangerously-skip-permissions` semantics, matching how the Coder Tasks template already
+  invokes it. **On a machine with a hand-maintained `~/.claude/settings.json` (e.g. one with its
+  own `enabledPlugins`/marketplace config), chezmoi owns the whole file — applying this
+  overwrites it, not merges.** Manual `chezmoi apply` prompts on conflict; the Coder dotfiles
+  module's `--force` bootstrap does not.
+- `dot_claude/skills/` → `~/.claude/skills/` — empty (kept via `.chezmoikeep`), for personal
+  skills to be added here directly so they sync across machines. Distinct from
+  plugin/marketplace-installed skills, which aren't dotfiles-managed.
 
 Deliberately does **not** manage `~/.gitconfig` — in the Coder workspace, git identity is set
 dynamically per workspace owner by the template itself.
